@@ -76,9 +76,11 @@ impl<C> KeyProvider for SecretStoreKeys<C> where C: CallContract + RegistryInfo 
 	}
 
 	fn available_keys(&self, block: BlockId, account: &Address) -> Option<Vec<Address>> {
+    info!("Checking available keys for '{:?}'", account );
 		match *self.keys_acl_contract.read() {
 			Some(acl_contract_address) => {
 				let (data, decoder) = keys_acl_contract::functions::available_keys::call(*account);
+        info!("Calling with data = '{:?}'", data );        
 				if let Ok(value) = self.client.call_contract(block, acl_contract_address, data) {
 					decoder.decode(&value).ok().map(|key_values| {
 						key_values.iter().map(key_to_address).collect()
@@ -93,11 +95,17 @@ impl<C> KeyProvider for SecretStoreKeys<C> where C: CallContract + RegistryInfo 
 
 	fn update_acl_contract(&self) {
 		let contract_address = self.client.registry_address(ACL_CHECKER_CONTRACT_REGISTRY_NAME.into(), BlockId::Latest);
+    info!("update_acl_contract returning ACL address of '{:?}'", contract_address );
+
 		if *self.keys_acl_contract.read() != contract_address {
+      info!("update_acl_contract CONFIGURING'", contract_address );
+
 			trace!(target: "privatetx", "Configuring for ACL checker contract from address {:?}",
 				contract_address);
 			*self.keys_acl_contract.write() = contract_address;
-		}
+		} else {
+      info!("update_acl_contract no need to configure because of list  '{:#?}'", *self.keys_acl_contract.read() );
+    }
 	}
 }
 

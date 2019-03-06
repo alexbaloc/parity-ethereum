@@ -557,6 +557,7 @@ impl Provider {
 		if let Some(key_server_account) = self.keys_provider.key_server_account() {
 			if let Some(available_contracts) = self.keys_provider.available_keys(block, &key_server_account) {
 				for private_contract in available_contracts {
+          info!("execute_private - looking for {}; available_keys = '{:?}'", contract_address, available_contracts );
 					if private_contract == contract_address {
 						continue;
 					}

@@ -1434,13 +1434,15 @@ impl RegistryInfo for Client {
 
 		let address = self.registrar_address?;
 
-    info!("Asking for registry value of {} with hash {}", name, keccak(name.as_bytes()) );
+    info!("Asking for registry value of '{}' with hash '{}'", name, keccak(name.as_bytes()) );
 
 		let (data, decoder) = registry::functions::get_address::call(keccak(name.as_bytes()), "A");
 		let value = decoder.decode(&self.call_contract(block, address, data).ok()?).ok()?;
 		if value.is_zero() {
+      info!("Return value for registry of '{}' is ZERO", name);
 			None
 		} else {
+      info!("Return value for registry of '{}' is '{}'", name, value);
 			Some(value)
 		}
 	}
