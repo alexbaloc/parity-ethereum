@@ -98,7 +98,7 @@ impl<C> KeyProvider for SecretStoreKeys<C> where C: CallContract + RegistryInfo 
     info!("update_acl_contract returning ACL address of '{:?}'", contract_address );
 
 		if *self.keys_acl_contract.read() != contract_address {
-      info!("update_acl_contract on '{}'", contract_address );
+      info!("update_acl_contract on '{:?}'", contract_address );
 
 			trace!(target: "privatetx", "Configuring for ACL checker contract from address {:?}",
 				contract_address);
