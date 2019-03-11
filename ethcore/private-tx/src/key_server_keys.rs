@@ -83,7 +83,7 @@ impl<C> KeyProvider for SecretStoreKeys<C> where C: CallContract + RegistryInfo 
 				let (data, decoder) = keys_acl_contract::functions::available_keys::call(*account);
         info!("Calling with data = '{:?}'", data );
 				if let Ok(value) = self.client.call_contract(block, acl_contract_address, data) {
-          info!("Resulting data in call = '{:?}'", value;
+          info!("Resulting data in call = '{:?}'", value);
 					decoder.decode(&value).ok().map(|key_values| {
 						key_values.iter().map(key_to_address).collect()
 					})
