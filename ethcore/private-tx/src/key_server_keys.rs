@@ -29,6 +29,7 @@ use_contract!(keys_acl_contract, "res/keys_acl.json");
 
 /// Returns the address (of the contract), that corresponds to the key
 pub fn key_to_address(key: &H256) -> Address {
+  info!(" key_to_address converting '{:?}' to '{:?}'", key , Address::from_slice(&key.to_vec()[..10]));
 	Address::from_slice(&key.to_vec()[..10])
 }
 
@@ -80,16 +81,21 @@ impl<C> KeyProvider for SecretStoreKeys<C> where C: CallContract + RegistryInfo 
 		match *self.keys_acl_contract.read() {
 			Some(acl_contract_address) => {
 				let (data, decoder) = keys_acl_contract::functions::available_keys::call(*account);
-        info!("Calling with data = '{:?}'", data );        
+        info!("Calling with data = '{:?}'", data );
 				if let Ok(value) = self.client.call_contract(block, acl_contract_address, data) {
+          info!("Resulting data in call = '{:?}' with decoder {:?}", value, decoder );
 					decoder.decode(&value).ok().map(|key_values| {
 						key_values.iter().map(key_to_address).collect()
 					})
 				} else {
+          info!("Resulting data in call - received not OK answer");
 					None
 				}
 			}
-			None => None,
+			None => {
+        info!("Resulting data in call - no data received!");
+        None
+      },
 		}
 	}
 
