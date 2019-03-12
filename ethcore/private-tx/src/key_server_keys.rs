@@ -29,7 +29,7 @@ use_contract!(keys_acl_contract, "res/keys_acl.json");
 
 /// Returns the address (of the contract), that corresponds to the key
 pub fn key_to_address(key: &H256) -> Address {
-	Address::from_slice(&key.to_vec()[..10])
+	Address::from_slice(&key.to_vec()[12..])
 }
 
 /// Returns the key from the key server associated with the contract
@@ -164,7 +164,7 @@ mod tests {
 
 	#[test]
 	fn should_update_acl_contract() {
-		let key = KeyPair::from_secret(Secret::from("0000000000000000000000000000000000000000000000000000000000000011")).unwrap();
+		let key = KeyPair::from_secret(Secret::from("552c98c93b0da3c1ba11bd2473926bb84b5e8f4673aedac96ef605a987c789d8")).unwrap();
 		let client = DummyRegistryClient::new(Some(key.address()));
 		let keys_data = SecretStoreKeys::new(Arc::new(client), None);
 		keys_data.update_acl_contract();
