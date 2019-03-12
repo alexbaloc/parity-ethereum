@@ -29,8 +29,8 @@ use_contract!(keys_acl_contract, "res/keys_acl.json");
 
 /// Returns the address (of the contract), that corresponds to the key
 pub fn key_to_address(key: &H256) -> Address {
-  info!(" key_to_address converting '{:?}' to '{:?}'", key , Address::from_slice(&key.to_vec()[10..]));
-	Address::from_slice(&key.to_vec()[10..])
+  info!(" key_to_address converting '{:?}' to '{:?}'", key , Address::from_slice(&key.to_vec()[12..]));
+	Address::from_slice(&key.to_vec()[12..])
 }
 
 /// Returns the key from the key server associated with the contract
